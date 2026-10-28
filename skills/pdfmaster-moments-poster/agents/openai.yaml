@@ -1,0 +1,4 @@
+interface:
+  display_name: "朋友圈海报 · PDFMaster案例"
+  short_description: "Create readable Moments posters from real product evidence"
+  default_prompt: "使用 $pdfmaster-moments-poster，参考PDFMaster已发布海报，为当前产品制作完整朋友圈海报。"

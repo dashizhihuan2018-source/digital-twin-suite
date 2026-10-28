@@ -11,7 +11,7 @@ description: Use when a product or project needs a promotional poster, WeChat Mo
 
 | 要完成的任务 | 对应技能 | 主要输出 |
 | --- | --- | --- |
-| 朋友圈介绍产品、项目分享长图 | `pdfmaster-moments-poster` | 完整竖版PNG和可复制配文 |
+| 朋友圈介绍产品、项目分享长图 | `pdfmaster-moments-poster` | 完整竖版PNG，按需配文 |
 | 视频内开场、平台上传封面、影片宣传海报 | `video-cover-poster` | 按用途分别命名的图片，必要时接入影片 |
 | 产品官网内容、视觉和UI | `product-launch-website` | 同一个设计/UI任务，不把网站当图片海报 |
 

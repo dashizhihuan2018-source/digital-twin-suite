@@ -1,10 +1,12 @@
-# 数字孪生技能套件 V1.2.0
+# 数字孪生技能套件 V1.3.0
 
 从长丰产业园最终项目与PDFMaster已发布案例提炼的九个独立技能：数字孪生、轻量模型、真实产品影片、穿越镜头、同场景特效，以及海报制作、朋友圈海报、视频封面、产品发布网站设计/UI。网站设计和UI是同一个技能。只采用核对后的最终网站与已发布成果，不以过程版或另造园区充当案例。
 
 [访问成果官网](https://dashizhihuan2018-source.github.io/digital-twin-suite/) · [下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
 
 ## 真实项目示例
+
+[亲自体验长丰数字孪生](https://dashizhihuan2018-source.github.io/digital-twin-suite/#case)：新增最终网站V1.4.12真实录屏，36秒静音循环，1280×720/30fps，约5MB。点击画面即可进入交互网站。参考[决赛作品集](https://maip.top/zjkghd-multiagent/)的展示方式，新录扫描、聚焦、分层与剖切；不是旧成片改名，也不改变参考作品集。
 
 [观看长丰4K产品发布片](https://dashizhihuan2018-source.github.io/digital-twin-suite/#product-film) · [下载V3.5.5原片](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/download/changfeng-film-v3.5.5/changfeng-digital-twin-V3.5.5-4K.mp4)
 
@@ -23,6 +25,7 @@ https://github.com/user-attachments/assets/59b0d548-94f7-4efa-b0c3-7ba8c73ee697
 - 网站：[长丰最终入口](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview)，2026-10-28核对为V1.4.12；修正了用户要求删除的7组装饰树。
 - 模型：以该版实际引用的建筑、环境GLB为准；文件名版本较旧不代表已淘汰。保持源模型只读，不随套件重分发。
 - 产品成片：选定V3.5.5，4K/30fps/1075帧；2026-10-28作者新要求将这份成片公开，网站可播放及下载，原私有工程不转公。
+- 官网预览：另行新录V1.4.12最终网站，36秒/720p/30fps无音轨；前后各1秒总览，中间为真实34秒一键巡演。7组被否决的树隐藏、5栋建筑与单个原始画布均核对。固定帧时钟不是实际运行帧率承诺。
 - 公开媒体：真实项目海报V1.3.0、R5已发布分享版；原聊天已授权指定媒体非商业公开展示，路径/哈希见[允许清单](docs/final-artifacts.json)。仍待人工视听验收，不称正式验收作品或V1.4.12新录屏。
 - 误选的程序化园区、演示影片和海报已撤出活动发布目录。
 
@@ -69,7 +72,7 @@ python3 scripts/install.py --only poster-production pdfmaster-moments-poster vid
 
 ## 构建展示站
 
-以下命令用于完整源码仓库（安装ZIP不含站点资源或测试）。Python 3.10+标准库即可构建，无npm安装或模型权重下载。先将明确授权的4K公开Release资产下载到忽略目录并核对字节数/SHA256，再构建。大视频不进入Git历史；允许清单只包含已选定海报、FPV与这份4K成片。
+以下命令用于完整源码仓库（安装ZIP不含站点资源或测试）。Python 3.10+标准库即可构建，无npm安装或模型权重下载。先将明确授权的4K公开Release资产下载到忽略目录并核对字节数/SHA256，再构建。4K大视频不进入Git历史；允许清单包含已选定海报、FPV、这份4K成片及新增约5MB最终网站预览和首帧封面。
 
 ```bash
 python3 -B scripts/fetch_public_media.py

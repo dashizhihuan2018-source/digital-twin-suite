@@ -17,7 +17,7 @@ class Selection(unittest.TestCase):
 
     def test_only_latest_published_media_allowlisted(self):
         media = self.data['public_media']
-        self.assertEqual(set(media), {'poster', 'fpv', 'product_film'})
+        self.assertEqual(set(media), {'poster', 'fpv', 'product_film', 'website_preview', 'website_preview_poster'})
         self.assertEqual(media['poster']['sha256'], '00d53424b723d1b699b7cf041b964b0f356f28eae8d311b39dba2bf67bcfccc6')
         self.assertEqual(media['fpv']['sha256'], '9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c')
         for key in ('poster', 'fpv'):

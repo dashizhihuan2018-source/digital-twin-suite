@@ -36,4 +36,6 @@ https://creativecommons.org/licenses/by/3.0/deed.en_US
 
 ## 外部参考
 
+2026-10-28按作者明确要求，从长丰最终网站V1.4.12新录36秒静音预览与同步首帧，文件和SHA256见[允许清单](docs/final-artifacts.json)。© 2026 Nankong，仅作保留来源与署名的非商业项目展示，第三方模型、纹理、品牌等权利不变；不公开源模型、工程或声音。新媒体同样按HUMAN-ONLY保留人工观感检查边界，不交AI审看、提取或重绘。无配乐、无音轨；不混用旧R5和V3.5.5素材。仅参考[决赛作品集](https://maip.top/zjkghd-multiagent/)的循环预览与点击导航方式，没有复制其媒体、标识或修改该网站。
+
 PDFMaster 视频仅作为声音风格和已确认基线的试听链接，仓库不打包裁切音频。Ollama、Qwen3-TTS、MLX-Audio 等仅链接官方来源，不分发其模型权重；运行库、模型及声音的权利须按所选版本另行确认。

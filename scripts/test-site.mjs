@@ -16,7 +16,7 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(base, { waitUntil: 'domcontentloaded' });
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(() => Promise.race([document.fonts.ready, new Promise((_, reject) => setTimeout(() => reject(Error('font load timeout')), 45000))]));
   report.titleFontLoaded = await page.evaluate(() => document.fonts.check('700 40px "Twin Display"'));
   assert.ok(report.titleFontLoaded);
 
@@ -27,7 +27,7 @@ try {
     return { internalNotes: ['HUMAN-ONLY','当前记录','V3.5.5','本轮','未重新渲染','版本、哈希'].filter(x => text.includes(x)) };
   });
   assert.deepEqual(report.publicCopy.internalNotes, []);
-  report.skillLinks = await page.locator('a[href^="skills/"][href$="/SKILL.md"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')));
+  report.skillLinks = await page.locator('a[href^="skills/"][href$="/index.html"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')));
   assert.equal(new Set(report.skillLinks).size, 9);
   assert.equal(report.skillLinks.filter(x => x.includes('product-launch-website')).length, 1);
   await page.waitForFunction(() => {

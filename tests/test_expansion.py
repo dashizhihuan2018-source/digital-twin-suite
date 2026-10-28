@@ -17,7 +17,7 @@ class Expansion(unittest.TestCase):
         html = (ROOT / 'site/index.html').read_text()
         for name in module.NAMES:
             self.assertTrue((ROOT / 'skills' / name / 'SKILL.md').is_file())
-            self.assertIn('skills/' + name + '/SKILL.md', html)
+            self.assertIn('skills/' + name + '/index.html', html)
         self.assertNotIn('product-launch-ui', module.NAMES)
 
     def test_skill_relative_references_resolve(self):

@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=process.argv[2]||'http://127.0.0.1:18867/';
+const out=process.argv[3]||'.work/preview-qa';
+const final='https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview';
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true,args:process.env.NO_PROXY_QA==='1'?['--no-proxy-server']:[]});
+const report={base,humanOnlyPixelReview:false,viewports:[],errors:[]};
+try{
+ const context=await browser.newContext({viewport:{width:1440,height:1000}});
+ await context.route('**/*',r=>['GET','HEAD','OPTIONS'].includes(r.request().method())?r.continue():r.abort());
+ const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
+ await page.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
+ await page.locator('#case-preview').scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>{const v=document.querySelector('#case-preview');return v.readyState>=2&&!v.paused&&v.currentTime>.3;},null,{timeout:45000});
+ report.preview=await page.locator('#case-preview').evaluate(v=>({width:v.videoWidth,height:v.videoHeight,duration:v.duration,muted:v.muted,loop:v.loop,playsInline:v.playsInline,controls:v.controls,currentTime:v.currentTime}));
+ assert.equal(report.preview.width,1280);assert.equal(report.preview.height,720);assert.equal(report.preview.duration,36);
+ assert.ok(report.preview.muted&&report.preview.loop&&report.preview.playsInline&&!report.preview.controls);
+ await page.locator('#case-preview-toggle').click();
+ await page.waitForFunction(()=>document.querySelector('#case-preview').paused);
+ assert.equal(await page.locator('#case-preview-toggle').getAttribute('aria-pressed'),'true');
+ await page.locator('h1').scrollIntoViewIfNeeded();
+ await page.locator('#case-preview').scrollIntoViewIfNeeded();
+ assert.ok(await page.locator('#case-preview').evaluate(v=>v.paused));
+ await page.locator('#case-preview-toggle').click();
+ await page.waitForFunction(()=>!document.querySelector('#case-preview').paused);
+ await page.locator('h1').scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>document.querySelector('#case-preview').paused);
+ await page.locator('#case-preview').scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>!document.querySelector('#case-preview').paused);
+ report.manualPausePersists=true;report.offscreenPause=true;report.visibleResume=true;
+ await page.locator('#case-preview').evaluate(v=>{v.currentTime=35.85;});
+ await page.waitForFunction(()=>{const v=document.querySelector('#case-preview');return !v.paused&&v.currentTime<2;},null,{timeout:15000});
+ report.loopBoundary=true;
+ const popupEvent=page.waitForEvent('popup');
+ await page.locator('.case-preview-link').focus();await page.keyboard.press('Enter');
+ const popup=await popupEvent;await popup.waitForURL(final,{waitUntil:'commit',timeout:45000});
+ report.clickTarget=popup.url();assert.equal(report.clickTarget,final);assert.equal(await popup.evaluate(()=>window.opener),null);await popup.close();
+ report.keyboardLink=true;
+ for(const width of [1440,768,390]){
+  await page.setViewportSize({width,height:1000});await page.locator('#case-preview').scrollIntoViewIfNeeded();
+  const layout=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,preview:document.querySelector('#case-preview').getBoundingClientRect().toJSON(),button:document.querySelector('#case-preview-toggle').getBoundingClientRect().toJSON()}));
+  assert.ok(layout.scrollWidth<=width);assert.ok(layout.preview.left>=0&&layout.preview.right<=width);assert.ok(layout.button.height>=44);
+  await page.screenshot({path:out+'/case-'+width+'-masked.png',mask:[page.locator('[data-human-only]'),page.locator('video')],maskColor:'#a7b8c4'});
+  report.viewports.push(layout);
+ }
+ await page.setViewportSize({width:1440,height:1000});await page.goto(new URL('skills/digital-twin/index.html',base).href,{waitUntil:'domcontentloaded'});
+ report.utf8={characterSet:await page.evaluate(()=>document.characterSet),title:await page.locator('h1').innerText(),rawDownload:await page.locator('a[download]').getAttribute('href')};
+ assert.equal(report.utf8.characterSet,'UTF-8');assert.equal(report.utf8.title,'数字孪生全链路');assert.equal(report.utf8.rawDownload,'SKILL.md');
+ assert.equal(await page.locator('article').innerText().then(x=>x.includes('\ufffd')),false);
+ await page.screenshot({path:out+'/utf8-master-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});
+ const readingLayout=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,toolsPosition:getComputedStyle(document.querySelector('.doc-tools')).position}));
+ assert.ok(readingLayout.scrollWidth<=390);assert.equal(readingLayout.toolsPosition,'static');
+ await page.screenshot({path:out+'/utf8-master-mobile.png',fullPage:true});
+ report.utf8.mobile=readingLayout;
+ await page.setViewportSize({width:1440,height:1000});
+ await page.getByRole('link',{name:'最终版复用契约'}).click();assert.equal(await page.evaluate(()=>document.characterSet),'UTF-8');assert.equal(await page.locator('h1').count(),1);
+ await page.goto(base,{waitUntil:'domcontentloaded'});
+ const skills=await page.locator('a[href^="skills/"][href$="/index.html"]').evaluateAll(ns=>ns.map(n=>n.href));
+ assert.equal(skills.length,9);
+ report.readingPages=[];
+ for(const href of skills){
+  await page.goto(href,{waitUntil:'domcontentloaded'});
+  assert.equal(await page.evaluate(()=>document.characterSet),'UTF-8');assert.equal(await page.locator('article h1').count(),1);
+  const links=await page.locator('article a[href],link[href],.doc-tools a[href]').evaluateAll(ns=>ns.map(n=>n.href));
+  for(const link of links){if(new URL(link).origin===new URL(base).origin){const r=await page.request.get(link,{timeout:30000});assert.equal(r.status(),200,link);}}
+  report.readingPages.push({path:new URL(href).pathname,title:await page.locator('h1').innerText()});
+ }
+ await context.close();
+ const reduced=await browser.newContext({reducedMotion:'reduce',viewport:{width:390,height:844}});
+ const rp=await reduced.newPage();await rp.goto(base,{waitUntil:'domcontentloaded'});await rp.locator('#case-preview').scrollIntoViewIfNeeded();
+ assert.equal(await rp.locator('#case-preview-toggle').innerText(),'播放演示');assert.ok(await rp.locator('#case-preview').evaluate(v=>v.paused));
+ await rp.locator('#case-preview-toggle').click();await rp.waitForFunction(()=>{const v=document.querySelector('#case-preview');return !v.paused&&v.currentTime>.3;},null,{timeout:45000});
+ report.reducedMotion={startsPaused:true,manualPlay:true};await reduced.close();
+ const faulty=await browser.newContext();await faulty.route('**/changfeng-final-preview-v1.mp4',r=>r.abort());
+ const fp=await faulty.newPage();await fp.goto(base,{waitUntil:'domcontentloaded'});await fp.locator('#case-preview').scrollIntoViewIfNeeded();
+ await fp.waitForFunction(()=>document.querySelector('#case-preview-status').textContent.includes('暂未加载'),null,{timeout:15000});
+ assert.equal(await fp.locator('.case-preview-link').getAttribute('href'),final);assert.ok(await fp.locator('#case-preview-toggle').isHidden());
+ report.failureFallback=true;await faulty.close();assert.deepEqual(report.errors,[]);
+}finally{await browser.close();await writeFile(out+'/report.json',JSON.stringify(report,null,2)+'\n');}
+console.log(JSON.stringify(report));

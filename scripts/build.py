@@ -33,8 +33,11 @@ SKILLS = (
 )
 SITE = ('index.html', 'styles.css', 'fonts.css', 'app.js', 'favicon.svg',
         'assets/changfeng-poster-v1.3.0.png', 'assets/changfeng-r5-demo.mp4',
+        'assets/changfeng-final-preview-v1.mp4', 'assets/changfeng-final-preview-v1.jpg',
         'assets/fonts/SourceHanSerifCN-Bold.otf', 'assets/fonts/OFL-1.1.txt')
 MEDIA = {
+    'website_preview': ('assets/changfeng-final-preview-v1.mp4', 5017821, 'c7ddb1c1110378eaa120660851a364c9eb7b1bb6d676425ee2e37999b9140b20'),
+    'website_preview_poster': ('assets/changfeng-final-preview-v1.jpg', 193016, 'd7d9953ecc572ad3786c2c7883c05ee77c53a611d4304ab2497fcb910cbe32f6'),
     'poster': ('assets/changfeng-poster-v1.3.0.png', 2207694, '00d53424b723d1b699b7cf041b964b0f356f28eae8d311b39dba2bf67bcfccc6'),
     'fpv': ('assets/changfeng-r5-demo.mp4', 6818112, '9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c'),
     'product_film': ('assets/changfeng-digital-twin-V3.5.5-4K.mp4', 102288446, 'f21473bafde5710bafb4eb1ae69b043218d7adc03937ce8f4b75c0833825b83b'),
@@ -77,7 +80,9 @@ def inline(text):
         elif ':' in dest or dest.startswith('//'):
             return html.escape(m[1])
         else:
-            if not dest.split('#')[0].endswith('SKILL.md'):
+            if dest.split('#')[0].endswith('/SKILL.md') or dest.split('#')[0] == 'SKILL.md':
+                dest = re.sub(r'SKILL\.md(?=#|$)', 'index.html', dest)
+            else:
                 dest = re.sub(r'\.md(?=#|$)', '.html', dest)
         return stash(f'<a href="{html.escape(dest, quote=True)}">{html.escape(m[1])}</a>')
     text = re.sub(r'\[([^\]]+)\]\(([^)\s]+)\)', link, text)
@@ -144,9 +149,13 @@ def render_markdown(markdown):
     flush()
     return '\n'.join(result)
 
-def document_page(text, name):
+def document_page(text, name, prefix='../', skill=False):
+    if skill:
+        text = re.sub(r'\A---\r?\n.*?\r?\n---\r?\n', '', text, count=1, flags=re.S)
     title = next((x[2:] for x in text.splitlines() if x.startswith('# ')), name)
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜数字孪生 Skill</title><link rel="icon" href="../favicon.svg"><link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="../fonts.css"></head><body><header class="site-header doc-header"><a class="brand" href="../index.html">数字孪生 Skill<small>从模型到交付</small></a></header><main class="doc-shell"><nav class="doc-tools" aria-label="文档工具"><a href="../index.html">← 返回首页</a><a href="{html.escape(name)}">查看 Markdown 原文 ↓</a></nav><article class="doc-article">{render_markdown(text)}</article></main></body></html>'''
+    raw_attrs = ' download' if skill else ''
+    raw_label = '下载 UTF-8 原文 ↓' if skill else '查看 Markdown 原文 ↓'
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜数字孪生 Skill</title><link rel="icon" href="{prefix}favicon.svg"><link rel="stylesheet" href="{prefix}styles.css"><link rel="stylesheet" href="{prefix}fonts.css"></head><body><header class="site-header doc-header"><a class="brand" href="{prefix}index.html">数字孪生 Skill<small>从模型到交付</small></a></header><main class="doc-shell"><nav class="doc-tools" aria-label="文档工具"><a href="{prefix}index.html">← 返回首页</a><a href="{html.escape(name)}"{raw_attrs}>{raw_label}</a></nav><article class="doc-article">{render_markdown(text)}</article></main></body></html>'''
 
 def archive_bytes(root):
     paths = list(ROOT_FILES) + ['scripts/install.py']
@@ -201,14 +210,20 @@ def build(root, output):
             shutil.copyfile(root / rel, dest)
         for name in DOCS:
             if name.endswith('.md'):
-                (stage / 'docs' / name.replace('.md', '.html')).write_text(document_page((root / 'docs' / name).read_text(), name))
+                (stage / 'docs' / name.replace('.md', '.html')).write_text(document_page((root / 'docs' / name).read_text(encoding='utf-8'), name), encoding='utf-8')
+        for rel in SKILLS:
+            if rel.endswith('.md'):
+                source = Path('skills') / rel
+                target = source.with_name('index.html') if source.name == 'SKILL.md' else source.with_suffix('.html')
+                prefix = '../' * len(source.parent.parts)
+                (stage / target).write_text(document_page((root / source).read_text(encoding='utf-8'), source.name, prefix, skill=True), encoding='utf-8')
         (stage / 'assets/digital-twin-skills.zip').write_bytes(archive)
         records = []
         for path in sorted(stage.rglob('*')):
             if path.is_file():
                 raw = path.read_bytes()
                 records.append({'path': path.relative_to(stage).as_posix(), 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
-        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.2.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
+        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.3.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
         if output.is_symlink():
             raise ValueError('refuse symlink output')
         if output.exists():

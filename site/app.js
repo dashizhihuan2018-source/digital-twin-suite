@@ -11,6 +11,52 @@ navigation?.addEventListener('click', event => {
     navigation.classList.remove('open');
   }
 });
+const preview = document.querySelector('#case-preview');
+if (preview) {
+  const toggle = document.querySelector('#case-preview-toggle');
+  const status = document.querySelector('#case-preview-status');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let visible = false, manual = null, failed = false;
+  const wantsPlayback = () => manual ?? !reduced.matches;
+  const syncPreview = () => {
+    const wanted = wantsPlayback();
+    toggle.textContent = wanted ? '暂停演示' : '播放演示';
+    toggle.setAttribute('aria-pressed', String(!wanted));
+    if (!wanted || !visible || document.hidden || failed) {
+      preview.pause();
+      return;
+    }
+    preview.play().catch(error => {
+      if (error.name === 'AbortError' || !visible || document.hidden || failed) return;
+      manual = false;
+      status.textContent = '可点击播放演示，也可点击画面直接进入互动体验。';
+      syncPreview();
+    });
+  };
+  toggle.hidden = false;
+  toggle.addEventListener('click', () => {
+    manual = !wantsPlayback();
+    status.textContent = '';
+    syncPreview();
+  });
+  preview.addEventListener('error', () => {
+    failed = true;
+    toggle.hidden = true;
+    status.textContent = '演示暂未加载，点击画面仍可进入长丰数字孪生。';
+    syncPreview();
+  }, true);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting && entries[0].intersectionRatio >= 0.18;
+      syncPreview();
+    }, { threshold: [0, 0.18] }).observe(preview);
+  } else { visible = true; }
+  reduced.addEventListener('change', syncPreview);
+  document.addEventListener('visibilitychange', syncPreview);
+  window.addEventListener('pagehide', () => preview.pause());
+  window.addEventListener('pageshow', syncPreview);
+  syncPreview();
+}
 const fpv = document.querySelector('#fpv-video');
 // The static host ignores byte ranges. Buffer this exact small share file so
 // native controls can seek without altering or re-encoding the approved media.

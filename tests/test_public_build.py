@@ -33,7 +33,7 @@ class PublicBuild(unittest.TestCase):
                 self.assertEqual(len(raw), item['bytes'])
                 self.assertEqual(hashlib.sha256(raw).hexdigest(), item['sha256'])
             with zipfile.ZipFile(archive) as z:
-                self.assertFalse(any(p.endswith(('.mp4', '.png', '.glb')) for p in z.namelist()))
+                self.assertFalse(any(p.endswith(('.mp4', '.png', '.jpg', '.glb')) for p in z.namelist()))
                 self.assertEqual(len([p for p in z.namelist() if p.endswith('/SKILL.md')]), 9)
                 z.extractall(Path(tmp) / 'unpack')
             unpacked = Path(tmp) / 'unpack/digital-twin-suite'

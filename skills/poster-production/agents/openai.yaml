@@ -1,0 +1,4 @@
+interface:
+  display_name: "海报制作"
+  short_description: "Select a truthful product poster or video cover workflow"
+  default_prompt: "使用 $poster-production 为当前产品选择海报用途，制作真实、手机可读的完整海报。"

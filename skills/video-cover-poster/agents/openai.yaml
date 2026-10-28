@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频封面海报 · 长丰案例"
+  short_description: "Create distinct video opening covers and upload thumbnails"
+  default_prompt: "使用 $video-cover-poster，以长丰最终成果方法制作视频封面，先区分片内开场、平台封面与宣传海报。"

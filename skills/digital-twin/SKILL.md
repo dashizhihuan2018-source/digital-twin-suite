@@ -17,6 +17,10 @@ description: Use when coordinating a digital-twin project from lightweight 3D as
 | 发布片、真实操作、旁白词点对齐 | `../twin-product-film/SKILL.md` |
 | 连续穿越、航线净空与相机 | `../twin-fpv-film/SKILL.md` |
 | 扫描、能流、分层、剖切与复位 | `../twin-effects/SKILL.md` |
+| 选择朋友圈海报或视频封面流程 | `../poster-production/SKILL.md` |
+| 朋友圈海报，参考PDFMaster | `../pdfmaster-moments-poster/SKILL.md` |
+| 片内开场、平台封面或宣传封面 | `../video-cover-poster/SKILL.md` |
+| 产品发布网站设计与UI，同一个任务 | `../product-launch-website/SKILL.md` |
 
 缺少同级技能时报告具体名称，并按下文最小安全流程继续只读盘点；不要虚构已加载或安装。各子技能独立可用，不要求私有工具/场景/云账号。
 
@@ -48,6 +52,6 @@ description: Use when coordinating a digital-twin project from lightweight 3D as
 
 ## 交付清单
 
-源码、可编辑模型/分镜、GLB与语义映射、网页、实际视频与海报、五技能、安装教程、声音参考、素材清单、哈希/版本和验证报告。公开包排除私有模型/客户数据/密钥/缓存；第三方许可证随资产保留。
+按本次范围交源码、可编辑模型/分镜、GLB与语义映射、网页、实际视频与海报、所用技能、安装教程、声音参考、素材清单、哈希/版本和验证报告；九技能可独立调用，不强制每次制作全部成果。公开包排除私有模型/客户数据/密钥/缓存；第三方许可证随资产保留。
 
 总结经验按“遇到的问题→采取的方法→可验证证据→仍未验证的边界”写，区别历史证据与本轮实测，不捏造压缩率、节能率、原生4K或全平台通过。

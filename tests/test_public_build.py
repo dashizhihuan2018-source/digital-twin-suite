@@ -34,12 +34,12 @@ class PublicBuild(unittest.TestCase):
                 self.assertEqual(hashlib.sha256(raw).hexdigest(), item['sha256'])
             with zipfile.ZipFile(archive) as z:
                 self.assertFalse(any(p.endswith(('.mp4', '.png', '.glb')) for p in z.namelist()))
-                self.assertEqual(len([p for p in z.namelist() if p.endswith('/SKILL.md')]), 5)
+                self.assertEqual(len([p for p in z.namelist() if p.endswith('/SKILL.md')]), 9)
                 z.extractall(Path(tmp) / 'unpack')
             unpacked = Path(tmp) / 'unpack/digital-twin-suite'
             result = subprocess.run(['python3', '-B', str(unpacked / 'scripts/install.py'), '--dest', str(Path(tmp) / 'installed'), '--apply'], capture_output=True)
             self.assertEqual(result.returncode, 0, result.stderr.decode())
-            self.assertEqual(len(list((Path(tmp) / 'installed').glob('*/SKILL.md'))), 5)
+            self.assertEqual(len(list((Path(tmp) / 'installed').glob('*/SKILL.md'))), 9)
             b.build(ROOT, output)
             self.assertEqual(before, archive.read_bytes())
 

@@ -12,7 +12,7 @@ import zipfile
 
 ROOT_FILES = ('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
 DOCS = ('changfeng-case.md', 'final-selection.md', 'final-artifacts.json',
-        'local-models.md', 'voice-reference.md', 'validation.md')
+        'local-models.md', 'voice-reference.md', 'validation.md', 'creative-workflows.md')
 SKILLS = (
     'digital-twin/SKILL.md', 'digital-twin/agents/openai.yaml',
     'digital-twin/references/changfeng-final.md',
@@ -23,6 +23,13 @@ SKILLS = (
     'twin-fpv-film/SKILL.md', 'twin-fpv-film/agents/openai.yaml',
     'twin-fpv-film/scripts/check_route.py',
     'twin-effects/SKILL.md', 'twin-effects/agents/openai.yaml',
+    'poster-production/SKILL.md', 'poster-production/agents/openai.yaml',
+    'pdfmaster-moments-poster/SKILL.md', 'pdfmaster-moments-poster/agents/openai.yaml',
+    'pdfmaster-moments-poster/references/pdfmaster-example.md',
+    'video-cover-poster/SKILL.md', 'video-cover-poster/agents/openai.yaml',
+    'video-cover-poster/references/changfeng-cover.md',
+    'product-launch-website/SKILL.md', 'product-launch-website/agents/openai.yaml',
+    'product-launch-website/references/pdfmaster-website.md',
 )
 SITE = ('index.html', 'styles.css', 'fonts.css', 'app.js', 'favicon.svg',
         'assets/changfeng-poster-v1.3.0.png', 'assets/changfeng-r5-demo.mp4',
@@ -195,7 +202,7 @@ def build(root, output):
             if path.is_file():
                 raw = path.read_bytes()
                 records.append({'path': path.relative_to(stage).as_posix(), 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
-        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.0.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
+        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.1.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
         if output.is_symlink():
             raise ValueError('refuse symlink output')
         if output.exists():

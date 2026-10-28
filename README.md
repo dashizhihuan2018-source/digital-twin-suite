@@ -1,6 +1,6 @@
-# 数字孪生技能套件 V1.0.0
+# 数字孪生技能套件 V1.1.0
 
-从长丰产业园最终项目提炼的五个独立技能：轻量模型、真实产品影片、穿越镜头和同场景可逆特效。只采用核对后的最终网站与已发布成果，不以过程版或另造园区充当案例。已发布技术示例与正式人工验收分开标注。
+从长丰产业园最终项目与PDFMaster已发布案例提炼的九个独立技能：数字孪生、轻量模型、真实产品影片、穿越镜头、同场景特效，以及海报制作、朋友圈海报、视频封面、产品发布网站设计/UI。网站设计和UI是同一个技能。只采用核对后的最终网站与已发布成果，不以过程版或另造园区充当案例。
 
 [访问成果官网](https://nankong-digital-twin.daintysquid12.chatgpt.site) · [下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
 
@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/59b0d548-94f7-4efa-b0c3-7ba8c73ee697
 
 详见[最终成果选材规则](docs/final-selection.md)与[长丰最终版经验](docs/changfeng-case.md)。
 
-## 五个技能
+## 九个技能
 
 | 技能 | 内容 |
 | --- | --- |
@@ -33,6 +33,12 @@ https://github.com/user-attachments/assets/59b0d548-94f7-4efa-b0c3-7ba8c73ee697
 | [twin-product-film](skills/twin-product-film/SKILL.md) | 最终产品实录、台词时点、原生像素与帧时钟 |
 | [twin-fpv-film](skills/twin-fpv-film/SKILL.md) | 连续航线、视角与净空；区分已发布示例与正式验收 |
 | [twin-effects](skills/twin-effects/SKILL.md) | 复用同一场景、资源所有权与复位 |
+| [poster-production](skills/poster-production/SKILL.md) | 海报制作总入口 |
+| [pdfmaster-moments-poster](skills/pdfmaster-moments-poster/SKILL.md) | 朋友圈海报，以PDFMaster为例 |
+| [video-cover-poster](skills/video-cover-poster/SKILL.md) | 视频封面海报，以长丰数字孪生为例 |
+| [product-launch-website](skills/product-launch-website/SKILL.md) | 产品发布网站设计与UI，以PDFMaster为例，同一技能 |
+
+[海报与官网案例](docs/creative-workflows.md)包含PDFMaster原版海报/网站与长丰的明确来源；PDFMaster媒体仅链接原站，不随包再分发。
 
 ## 教程
 
@@ -50,6 +56,13 @@ python3 -B -m unittest discover -s tests -v
 ```
 
 安装后保留各技能完整目录。默认读取`CODEX_HOME/skills`，否则为`~/.codex/skills`；也可用`--dest <目录>`指定位置，已有同名技能绝不覆盖。
+
+已有前五技能时，可只补装新增四项，不覆盖任何旧技能：
+
+```bash
+python3 scripts/install.py --only poster-production pdfmaster-moments-poster video-cover-poster product-launch-website
+python3 scripts/install.py --only poster-production pdfmaster-moments-poster video-cover-poster product-launch-website --apply
+```
 
 ## 构建展示站
 

@@ -27,6 +27,9 @@ try {
     return { internalNotes: ['HUMAN-ONLY','当前记录','V3.5.5','本轮','未重新渲染','版本、哈希'].filter(x => text.includes(x)) };
   });
   assert.deepEqual(report.publicCopy.internalNotes, []);
+  report.skillLinks = await page.locator('a[href^="skills/"][href$="/SKILL.md"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')));
+  assert.equal(new Set(report.skillLinks).size, 9);
+  assert.equal(report.skillLinks.filter(x => x.includes('product-launch-website')).length, 1);
   await page.waitForFunction(() => {
     const image = document.querySelector('.hero-poster img');
     const video = document.querySelector('#fpv-video');
@@ -87,7 +90,7 @@ try {
     assert.equal(response.status, 200, url.href);
     report.links.push({ path: url.pathname, status: response.status });
   }
-  for (const name of ['local-models', 'voice-reference', 'changfeng-case', 'final-selection', 'validation']) {
+  for (const name of ['local-models', 'voice-reference', 'changfeng-case', 'final-selection', 'validation', 'creative-workflows']) {
     await page.goto(new URL('docs/' + name + '.html', base).href, { waitUntil: 'domcontentloaded' });
     assert.ok(await page.locator('article h1').count() === 1);
     const links = await page.locator('article a[href]').evaluateAll(nodes => nodes.map(n => n.href));

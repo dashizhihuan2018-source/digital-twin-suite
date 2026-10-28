@@ -1,0 +1,4 @@
+interface:
+  display_name: "产品发布网站设计/UI · PDFMaster案例"
+  short_description: "Design and implement evidence-backed product launch sites"
+  default_prompt: "使用 $product-launch-website，参考PDFMaster，把产品内容、视觉设计、响应式UI与真实下载入口做成同一个发布网站。"

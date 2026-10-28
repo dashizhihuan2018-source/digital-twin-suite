@@ -1,5 +1,9 @@
 # 第三方许可与素材边界
 
+## PDFMaster参考案例
+
+新增朋友圈海报与产品发布网站技能仅链接PDFMaster已发布原站、海报和源码；不复制、镜像或打包其摄影、UI、视频、声音、图标或安装器。原媒体未单独授予再分发许可，原署名和第三方权利依[原媒体说明](https://github.com/dashizhihuan2018-source/PDFMaster/blob/9174f2954acae708fe74e9a7f0b37cfd5ee78790/docs/media/README.md)保留。新增技能是方法总结，不改写上游许可。
+
 ## 长丰已发布海报与FPV
 
 仅采用[允许清单](docs/final-artifacts.json)中的真实项目海报V1.3.0、R5分享版，固定原公开仓库提交`f1e49e3cb38ac001433db2244c905d77f5598881`。来源为[FPV Video Skill](https://github.com/dashizhihuan2018-source/fpv-video-skill)，保留[媒体说明](https://github.com/dashizhihuan2018-source/fpv-video-skill/blob/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/README.md)与[单独媒体声明](https://github.com/dashizhihuan2018-source/fpv-video-skill/blob/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/LICENSE.md)。它们不按本套件文档许可重新授权。

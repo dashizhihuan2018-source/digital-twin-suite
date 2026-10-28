@@ -12,6 +12,31 @@ navigation?.addEventListener('click', event => {
   }
 });
 const fpv = document.querySelector('#fpv-video');
+// The static host ignores byte ranges. Buffer this exact small share file so
+// native controls can seek without altering or re-encoding the approved media.
+if (fpv) {
+  const status = document.querySelector('#media-status');
+  let objectUrl;
+  status.textContent = '视频加载中…';
+  (async () => {
+    const response = await fetch(fpv.querySelector('source').src);
+    if (!response.ok) throw new Error('media response');
+    const bytes = await response.arrayBuffer();
+    if (bytes.byteLength !== 6818112) throw new Error('media length');
+    const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
+      .map(x => x.toString(16).padStart(2, '0')).join('');
+    if (digest !== '9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c') throw new Error('media integrity');
+    const resume = !fpv.paused;
+    objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'video/mp4' }));
+    fpv.src = objectUrl;
+    fpv.load();
+    fpv.dataset.bufferReady = 'true';
+    fpv.dataset.verifiedSha256 = digest;
+    status.textContent = '';
+    if (resume) await fpv.play();
+  })().catch(() => { status.textContent = '完整缓冲暂不可用，可下载同版视频观看。'; });
+  window.addEventListener('pagehide', event => { if (!event.persisted && objectUrl) URL.revokeObjectURL(objectUrl); });
+}
 fpv?.addEventListener('error', () => {
   document.querySelector('#media-status').textContent = '视频加载失败，可下载同版文件或查看原媒体来源。';
 });

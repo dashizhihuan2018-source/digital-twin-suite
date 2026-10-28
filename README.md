@@ -2,7 +2,7 @@
 
 从长丰产业园最终项目提炼的五个独立技能：轻量模型、真实产品影片、穿越镜头和同场景可逆特效。只采用核对后的最终网站与已发布成果，不以过程版或另造园区充当案例。已发布技术示例与正式人工验收分开标注。
 
-[下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
+[访问成果官网](https://nankong-digital-twin.daintysquid12.chatgpt.site) · [下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
 
 ## 真实项目示例
 

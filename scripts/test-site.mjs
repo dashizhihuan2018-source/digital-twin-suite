@@ -9,6 +9,10 @@ const report = { base, humanOnlyPixelReview: false, screenshots: 'all HUMAN-ONLY
 try {
   const context = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
   const page = await context.newPage();
+  const browserGet = url => page.evaluate(async url => {
+    const response = await fetch(url);
+    return { status: response.status, bytes: (await response.arrayBuffer()).byteLength };
+  }, url);
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(base, { waitUntil: 'domcontentloaded' });
@@ -26,8 +30,8 @@ try {
   await page.waitForFunction(() => {
     const image = document.querySelector('.hero-poster img');
     const video = document.querySelector('#fpv-video');
-    return image.complete && image.naturalWidth === 1600 && video.readyState >= 1;
-  });
+    return image.complete && image.naturalWidth === 1600 && video.readyState >= 1 && video.dataset.bufferReady === 'true';
+  }, null, { timeout: 60000 });
   report.poster = await page.locator('.hero-poster img').evaluate(image => ({ width: image.naturalWidth, height: image.naturalHeight }));
   assert.deepEqual(report.poster, { width: 1600, height: 2400 });
   report.video = await page.locator('#fpv-video').evaluate(async video => {
@@ -39,16 +43,15 @@ try {
   report.video.afterTime = await page.locator('#fpv-video').evaluate(video => { video.pause(); video.currentTime = 20; return video.currentTime; });
   await page.waitForFunction(() => { const v = document.querySelector('#fpv-video'); return !v.seeking && v.readyState >= 2; });
   report.video.seekedTime = await page.locator('#fpv-video').evaluate(video => video.currentTime);
-  const rangeResponse = await context.request.get(new URL('assets/changfeng-r5-demo.mp4', base).href, { headers: { Range: 'bytes=0-1023' } });
-  report.mediaRange = { status: rangeResponse.status(), contentRange: rangeResponse.headers()['content-range'] || null };
-  if (report.mediaRange.status === 206) {
-    assert.ok(Math.abs(report.video.seekedTime - 20) < 0.2, 'seek did not reach 20 seconds');
-    report.video.seeked = true;
-  } else {
-    assert.equal(new URL(base).hostname, '127.0.0.1', 'production media must support Range');
-    report.video.seeked = false;
-    report.video.seekLimit = 'Local Python preview lacks HTTP Range; production must pass Range and seek.';
-  }
+  report.mediaRange = await page.evaluate(async () => {
+    const r = await fetch('assets/changfeng-r5-demo.mp4', { headers: { Range: 'bytes=0-1023' } });
+    await r.arrayBuffer();
+    return { status: r.status, contentRange: r.headers.get('content-range') };
+  });
+  report.video.buffer = await page.locator('#fpv-video').evaluate(v => ({ source: v.src.startsWith('blob:') ? 'verified-byte-buffer' : 'remote', sha256: v.dataset.verifiedSha256 }));
+  assert.equal(report.video.buffer.sha256, '9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c');
+  assert.ok(Math.abs(report.video.seekedTime - 20) < 0.2, 'seek did not reach 20 seconds');
+  report.video.seeked = true;
   assert.equal(report.video.width, 1920); assert.equal(report.video.height, 1080);
   assert.ok(Math.abs(report.video.duration - 30.733333) < 0.1);
   assert.ok(report.video.controls);
@@ -80,9 +83,9 @@ try {
   for (const value of localUrls) {
     const url = new URL(value, base);
     if (url.origin !== new URL(base).origin || (url.hash && url.pathname === new URL(base).pathname)) continue;
-    const response = await context.request.get(url.href);
-    assert.equal(response.status(), 200, url.href);
-    report.links.push({ path: url.pathname, status: response.status() });
+    const response = await browserGet(url.href);
+    assert.equal(response.status, 200, url.href);
+    report.links.push({ path: url.pathname, status: response.status });
   }
   for (const name of ['local-models', 'voice-reference', 'changfeng-case', 'final-selection', 'validation']) {
     await page.goto(new URL('docs/' + name + '.html', base).href, { waitUntil: 'domcontentloaded' });
@@ -90,8 +93,8 @@ try {
     const links = await page.locator('article a[href]').evaluateAll(nodes => nodes.map(n => n.href));
     for (const value of new Set(links)) {
       if (new URL(value).origin !== new URL(base).origin) continue;
-      const response = await context.request.get(value);
-      assert.equal(response.status(), 200, value);
+      const response = await browserGet(value);
+      assert.equal(response.status, 200, value);
     }
     report.links.push({ document: name, codeBlocks: await page.locator('pre').count() });
   }

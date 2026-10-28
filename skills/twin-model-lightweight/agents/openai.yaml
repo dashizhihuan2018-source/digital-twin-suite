@@ -1,0 +1,4 @@
+interface:
+  display_name: "轻量化数字孪生模型"
+  short_description: "Audit and optimize GLB while preserving scene identity"
+  default_prompt: "使用 $twin-model-lightweight 为当前模型建立只读基线，再提出可逆优化和验证方案。"

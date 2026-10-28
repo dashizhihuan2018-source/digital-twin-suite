@@ -1,0 +1,4 @@
+interface:
+  display_name: "数字孪生产品发布片"
+  short_description: "Produce authentic demos with frame and speech timing"
+  default_prompt: "使用 $twin-product-film 制作真实操作发布片，锁定全局帧时钟、台词词点和输入像素。"

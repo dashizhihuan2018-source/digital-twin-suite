@@ -1,0 +1,4 @@
+interface:
+  display_name: "数字孪生可逆特效"
+  short_description: "Add reversible effects with explicit resource ownership"
+  default_prompt: "使用 $twin-effects 在现有场景中增加特效，维护资源所有权、数据模式和完整复位。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "数字孪生穿越机视频"
+  short_description: "Plan continuous FPV motion and conservative clearance"
+  default_prompt: "使用 $twin-fpv-film 规划连续航线，验证净空、相机和原生帧时序，再制作穿越片。"

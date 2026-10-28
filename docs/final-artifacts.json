@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-28",
+  "website": {
+    "url": "https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview",
+    "version": "V1.4.12",
+    "release_manifest_sha256": "42fbabb556607f6f0697cb25a256535ca6aacf96fa119296319ce5f8eb7510f4"
+  },
+  "redistribute_source_models": false,
+  "private_product_film": {
+    "version": "V3.5.5",
+    "bytes": 102288446,
+    "sha256": "f21473bafde5710bafb4eb1ae69b043218d7adc03937ce8f4b75c0833825b83b",
+    "public_distribution": false
+  },
+  "public_media": {
+    "poster": {
+      "version": "V1.3.0",
+      "url": "https://raw.githubusercontent.com/dashizhihuan2018-source/fpv-video-skill/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/poster-v1.3.0.png",
+      "bytes": 2207694,
+      "sha256": "00d53424b723d1b699b7cf041b964b0f356f28eae8d311b39dba2bf67bcfccc6",
+      "dimensions": [1600, 2400],
+      "recorded_website_version": "not_applicable_R5_native_render",
+      "permission": "noncommercial_public_display",
+      "ai_pixel_review": "forbidden",
+      "formal_human_acceptance": "pending",
+      "qr_destination": "https://github.com/dashizhihuan2018-source/fpv-video-skill"
+    },
+    "fpv": {
+      "version": "R5 published share edition",
+      "url": "https://raw.githubusercontent.com/dashizhihuan2018-source/fpv-video-skill/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/changfeng-r5-demo.mp4",
+      "bytes": 6818112,
+      "sha256": "9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c",
+      "dimensions": [1920, 1080],
+      "fps": 30,
+      "frames": 922,
+      "duration_seconds": 30.733333,
+      "lossy_share_compression": true,
+      "recorded_website_version": "not_applicable_R5_native_render",
+      "permission": "noncommercial_public_display",
+      "ai_pixel_review": "forbidden",
+      "formal_human_acceptance": "pending"
+    }
+  },
+  "media_source_commit": "f1e49e3cb38ac001433db2244c905d77f5598881",
+  "media_license": "https://github.com/dashizhihuan2018-source/fpv-video-skill/blob/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/LICENSE.md",
+  "media_attribution": "https://github.com/dashizhihuan2018-source/fpv-video-skill/blob/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/README.md"
+}

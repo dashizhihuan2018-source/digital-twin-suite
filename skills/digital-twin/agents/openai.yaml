@@ -1,0 +1,4 @@
+interface:
+  display_name: "数字孪生全链路"
+  short_description: "Coordinate verified digital-twin web and film delivery"
+  default_prompt: "使用 $digital-twin 统筹当前模型、网页、视频与公开交付，并明确真实性和验收边界。"

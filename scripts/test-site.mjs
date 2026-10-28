@@ -4,7 +4,7 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright')
 const base = process.argv[2] || 'http://127.0.0.1:18867/';
 const out = process.argv[3] || '.work/browser-qa';
 await mkdir(out, { recursive: true });
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: process.env.NO_PROXY_QA === '1' ? ['--no-proxy-server'] : [] });
 const report = { base, humanOnlyPixelReview: false, screenshots: 'all HUMAN-ONLY media and video elements are masked before capture', viewports: [], links: [] };
 try {
   const context = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
@@ -59,6 +59,21 @@ try {
   assert.ok(Math.abs(report.video.duration - 30.733333) < 0.1);
   assert.ok(report.video.controls);
   report.video.playbackAdvanced = true;
+  const product = page.locator('#product-video');
+  await product.evaluate(video => { video.muted = true; video.load(); });
+  await page.waitForFunction(() => document.querySelector('#product-video').readyState >= 1, null, { timeout: 90000 });
+  report.productFilm = await product.evaluate(async video => {
+    await video.play();
+    return {width:video.videoWidth,height:video.videoHeight,duration:video.duration,controls:video.controls,startTime:video.currentTime,source:new URL(video.querySelector('source').src).pathname};
+  });
+  assert.equal(report.productFilm.width,3840); assert.equal(report.productFilm.height,2160);
+  assert.ok(Math.abs(report.productFilm.duration-35.833334)<0.1);
+  await page.waitForFunction(start => document.querySelector('#product-video').currentTime>start+0.5,report.productFilm.startTime);
+  await product.evaluate(video => {video.pause();video.currentTime=24.5;});
+  await page.waitForFunction(() => {const v=document.querySelector('#product-video');return !v.seeking && v.readyState>=2;},null,{timeout:60000});
+  report.productFilm.seekedTime=await product.evaluate(v=>v.currentTime);
+  assert.ok(Math.abs(report.productFilm.seekedTime-24.5)<0.2);
+  report.productFilm.playbackAdvanced=true;
   // Inspect layout with exact approved media, but never send its pixels to AI.
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 1000 });

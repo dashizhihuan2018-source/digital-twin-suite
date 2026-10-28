@@ -7,7 +7,7 @@ description: Use when producing or repairing a digital-twin product launch film,
 
 用真实功能构建“问题—操作—价值—行动”的故事。先确认允许公开的功能、画面、配音与参考视频权利；参考节奏，不复制他人的镜头或品牌身份。
 
-录制长丰同类功能时，以用户指定[最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview)为产品权威；2026-10-28网站为V1.4.12、模拟数据且无现场设备连接。选定V3.5.5是影片版本，不是网站版本。先从最终版真实操作取景。选定影片明确私有，不转存公开；没有最终媒体或权限时列缺口，不另造园区或使用过程片补位。
+录制长丰同类功能时，以用户指定[最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview)为产品权威；2026-10-28网站为V1.4.12、模拟数据且无现场设备连接。选定V3.5.5是影片版本，不是网站版本。先从最终版真实操作取景。作者于2026-10-28追加[这份完整4K成片的公开要求](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/tag/changfeng-film-v3.5.5)，不开放原私有工程或源资产，不授权AI审片、截帧或加工。没有最终媒体或对应权限时列缺口，不另造园区或使用过程片补位。
 
 ## 输入与边界
 

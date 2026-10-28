@@ -1,0 +1,42 @@
+name: Publish GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/configure-pages@v5
+      - name: Fetch exact authorized 4K release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download changfeng-film-v3.5.5 --repo "$GITHUB_REPOSITORY" --pattern changfeng-digital-twin-V3.5.5-4K.mp4 --dir .release-media
+          python3 -B scripts/fetch_public_media.py --verify-only
+      - name: Test and build allowlisted public site
+        run: |
+          python3 -B -m unittest discover -s tests -v
+          python3 -B scripts/build.py
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v4

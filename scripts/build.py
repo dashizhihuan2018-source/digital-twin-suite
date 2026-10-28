@@ -37,6 +37,7 @@ SITE = ('index.html', 'styles.css', 'fonts.css', 'app.js', 'favicon.svg',
 MEDIA = {
     'poster': ('assets/changfeng-poster-v1.3.0.png', 2207694, '00d53424b723d1b699b7cf041b964b0f356f28eae8d311b39dba2bf67bcfccc6'),
     'fpv': ('assets/changfeng-r5-demo.mp4', 6818112, '9dac1ef965277857d1496a6af21bae1d24e487268c0f9c2430cedaa351946f9c'),
+    'product_film': ('assets/changfeng-digital-twin-V3.5.5-4K.mp4', 102288446, 'f21473bafde5710bafb4eb1ae69b043218d7adc03937ce8f4b75c0833825b83b'),
 }
 
 def exact_tree(base, allowed):
@@ -175,7 +176,10 @@ def build(root, output):
         entry = selected['public_media'][key]
         if entry['sha256'] != sha or entry['bytes'] != size:
             raise ValueError(f'allowlist media declaration changed: {key}')
-        verify_media(root / 'site' / path, size, sha)
+        source = root / '.release-media' / Path(path).name if key == 'product_film' else root / 'site' / path
+        if source.is_symlink():
+            raise ValueError('symlink media source')
+        verify_media(source, size, sha)
     for rel in (*ROOT_FILES, *('docs/' + x for x in DOCS), *('skills/' + x for x in SKILLS), 'site/index.html', 'site/app.js'):
         text = (root / rel).read_text()
         if re.search(r'/Users/|/Volumes/|file://|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-(?:proj-|ant-)?[A-Za-z0-9_-]{24,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY', text):
@@ -189,6 +193,8 @@ def build(root, output):
             dest = stage / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / 'site' / rel, dest)
+        film = MEDIA['product_film'][0]
+        shutil.copyfile(root / '.release-media' / Path(film).name, stage / film)
         for rel in (*ROOT_FILES, *('docs/' + x for x in DOCS), *('skills/' + x for x in SKILLS)):
             dest = stage / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
@@ -202,7 +208,7 @@ def build(root, output):
             if path.is_file():
                 raw = path.read_bytes()
                 records.append({'path': path.relative_to(stage).as_posix(), 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
-        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.1.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
+        (stage / 'build-manifest.json').write_text(json.dumps({'schema_version': 1, 'suite_version': 'V1.2.0', 'excludes': ['build-manifest.json'], 'files': records}, ensure_ascii=False, indent=2) + '\n')
         if output.is_symlink():
             raise ValueError('refuse symlink output')
         if output.exists():

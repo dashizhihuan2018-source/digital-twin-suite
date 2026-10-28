@@ -28,9 +28,11 @@ https://creativecommons.org/licenses/by/3.0/deed.en_US
 
 网页标题使用Adobe Source Han Serif CN Bold原始字体，未修改字形或字体文件。原字体和SIL Open Font License 1.1随网页位于`site/assets/fonts/`，保留字体内部版权和许可信息。CSS显示别名仅用于网页样式，不改变原字体名称、保留名称或OFL许可。
 
-## 未分发的原工程与私有影片
+## 长丰4K产品片V3.5.5
 
-最终网站模型、源纹理和产品片V3.5.5不随套件公开转存。旧程序化园区及示意媒体已撤出活动成果区，不是长丰案例，也不再作为当前套件媒体主张。后续新增字体、库或媒体必须先纳入允许清单并保留适用许可。
+2026-10-28作者明确追加将今天选定的4K成片公开，范围仅为SHA256 `f21473bafde5710bafb4eb1ae69b043218d7adc03937ce8f4b75c0833825b83b`的102288446字节完整原片。见[独立发行与权利说明](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/tag/changfeng-film-v3.5.5)。影片保留© 2026 Nankong、非商业技术交流展示、HUMAN-ONLY及第三方资产权利边界，不授权AI审看、截帧、重绘或提取/再分发车树、模型、纹理、地图、声音参考等资产。
+
+原工程私有仓库、源模型、纹理、编辑分镜与参考声音仍不公开。成片公开不等于原资产开放授权，也不覆盖原封面单独加工。旧程序化园区及示意媒体不进入当前发布。技能安装ZIP不含任何媒体或模型权重。
 
 ## 外部参考
 

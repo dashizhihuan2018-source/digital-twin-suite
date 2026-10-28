@@ -1,10 +1,14 @@
-# 数字孪生技能套件 V1.1.0
+# 数字孪生技能套件 V1.2.0
 
 从长丰产业园最终项目与PDFMaster已发布案例提炼的九个独立技能：数字孪生、轻量模型、真实产品影片、穿越镜头、同场景特效，以及海报制作、朋友圈海报、视频封面、产品发布网站设计/UI。网站设计和UI是同一个技能。只采用核对后的最终网站与已发布成果，不以过程版或另造园区充当案例。
 
-[访问成果官网](https://nankong-digital-twin.daintysquid12.chatgpt.site) · [下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
+[访问成果官网](https://dashizhihuan2018-source.github.io/digital-twin-suite/) · [下载技能套件](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/latest) · [长丰最终网站](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview) · [验证记录](docs/validation.md)
 
 ## 真实项目示例
+
+[观看长丰4K产品发布片](https://dashizhihuan2018-source.github.io/digital-twin-suite/#product-film) · [下载V3.5.5原片](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/download/changfeng-film-v3.5.5/changfeng-digital-twin-V3.5.5-4K.mp4)
+
+今天选定的V3.5.5原片经作者明确要求公开，3840×2160/30fps/1075帧、约35.83秒、102288446字节；SHA256 `f21473bafde5710bafb4eb1ae69b043218d7adc03937ce8f4b75c0833825b83b`。没有重编码；正片原生4K录制，开头1秒原1080p封面放大。完整片按[独立发行说明](https://github.com/dashizhihuan2018-source/digital-twin-suite/releases/tag/changfeng-film-v3.5.5)保留非商业展示、第三方及HUMAN-ONLY边界。原工程仓库、模型与配音源文件仍不公开。
 
 ![长丰真实项目海报V1.3.0，仅供人工查看，非正式验收作品](https://raw.githubusercontent.com/dashizhihuan2018-source/fpv-video-skill/f1e49e3cb38ac001433db2244c905d77f5598881/media/changfeng/poster-v1.3.0.png)
 
@@ -18,7 +22,7 @@ https://github.com/user-attachments/assets/59b0d548-94f7-4efa-b0c3-7ba8c73ee697
 
 - 网站：[长丰最终入口](https://szls-changfeng.maip.top/EMS-changfeng/?twin=1#/page/ems-overview)，2026-10-28核对为V1.4.12；修正了用户要求删除的7组装饰树。
 - 模型：以该版实际引用的建筑、环境GLB为准；文件名版本较旧不代表已淘汰。保持源模型只读，不随套件重分发。
-- 产品成片：选定V3.5.5，4K/30fps/1075帧；有明确私有约定，不公开嵌入或转存。
+- 产品成片：选定V3.5.5，4K/30fps/1075帧；2026-10-28作者新要求将这份成片公开，网站可播放及下载，原私有工程不转公。
 - 公开媒体：真实项目海报V1.3.0、R5已发布分享版；原聊天已授权指定媒体非商业公开展示，路径/哈希见[允许清单](docs/final-artifacts.json)。仍待人工视听验收，不称正式验收作品或V1.4.12新录屏。
 - 误选的程序化园区、演示影片和海报已撤出活动发布目录。
 
@@ -52,7 +56,6 @@ https://github.com/user-attachments/assets/59b0d548-94f7-4efa-b0c3-7ba8c73ee697
 ```bash
 python3 scripts/install.py
 python3 scripts/install.py --apply
-python3 -B -m unittest discover -s tests -v
 ```
 
 安装后保留各技能完整目录。默认读取`CODEX_HOME/skills`，否则为`~/.codex/skills`；也可用`--dest <目录>`指定位置，已有同名技能绝不覆盖。
@@ -66,17 +69,19 @@ python3 scripts/install.py --only poster-production pdfmaster-moments-poster vid
 
 ## 构建展示站
 
-Python 3.10+标准库即可构建，无npm安装或模型下载。允许清单只包含选定的两份媒体；未知文件、符号链接及哈希不符会在修改输出前阻止构建。
+以下命令用于完整源码仓库（安装ZIP不含站点资源或测试）。Python 3.10+标准库即可构建，无npm安装或模型权重下载。先将明确授权的4K公开Release资产下载到忽略目录并核对字节数/SHA256，再构建。大视频不进入Git历史；允许清单只包含已选定海报、FPV与这份4K成片。
 
 ```bash
+python3 -B scripts/fetch_public_media.py
+python3 -B -m unittest discover -s tests -v
 python3 -B scripts/build.py
 python3 -B -m http.server 8000 --bind 127.0.0.1 --directory dist
 ```
 
-构建产物含HTML教程、技能原文、同版海报/视频、无媒体的技能安装ZIP及逐文件SHA256清单。浏览器回归脚本需要单独可用的Playwright与Chrome；通过`PLAYWRIGHT_MODULE`指定已安装的模块路径，不随技能套件安装浏览器。
+构建产物含HTML教程、技能原文、同版海报/视频、无媒体的技能安装ZIP及逐文件SHA256清单。GitHub Actions按同一流程发布至GitHub Pages，与PDFMaster使用同类github.io访问地址。不同地区/运营商连通性会变化，不保证所有网络始终可用。浏览器回归脚本需要单独可用的Playwright与Chrome；通过`PLAYWRIGHT_MODULE`指定已安装的模块路径，不随技能套件安装浏览器。
 
 ## 公开边界
 
-未确认版本或公开权限的媒体不进入发布包。产品影片V3.5.5仍私有；R5和海报仅按既有许可完整非商业展示、保留署名与来源，HUMAN-only完整画面不得交AI处理。网页可浏览不代表允许重新分发源模型、贴图、声音和视频。
+未确认版本或公开权限的媒体不进入发布包。V3.5.5仅这份完整成片获新增公开要求；R5和海报按既有许可完整非商业展示，均保留署名与来源。HUMAN-only完整画面不得交AI处理。网页可浏览不代表允许重新分发源模型、贴图、声源或其他影片。
 
 原创内容采用[非商业交流许可](LICENSE)，不是MIT/Apache；第三方权利见[说明](THIRD_PARTY_NOTICES.md)。自动测试、真实界面验证、听审、用户接受与公开授权分别记录。
